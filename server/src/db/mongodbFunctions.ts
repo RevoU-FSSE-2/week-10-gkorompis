@@ -49,7 +49,8 @@ export const mdbInsertOne = async (db_instance:DbInstance, collection_name:Colle
         console.log(">>> insert success to:", collection_name, "|||", postResponse);
         return postResponse;
     } catch (error){
-        console.log({error:500, message: "internal server error at database insert"});
+        console.log({code:500, message: "internal server error at mdbInsertOne", error});
+        return {code:500, message: "internal server error at mdbInsertOne", error};
     }
 }
 
@@ -78,7 +79,8 @@ export const mdbFetch = async (db_instance:DbInstance, collection_name:Collectio
         console.log(">>> fetch success from:", collection_name, "|||", getResponse);
         return documents;
     } catch (error){
-        console.log({error:500, message: "internal server error at database fetch"});
+        console.log({code:500, message: "internal server error at database fetch", error});
+        return {code:500, message: "internal server error at database fetch", error};
     }
 }
 
@@ -100,13 +102,26 @@ export const mdbUpdateOne = async (db_instance:DbInstance, collection_name:Colle
         if(_id){
             query._id = new ObjectId(_id);
         }
-        const updateResponse = collection.updateOne(query, {$set: document});
-
+        console.log(">>>update query:", query);
+        console.log(">>>update document:", document);
+         console.log(">>>instanceof Buffer:", document instanceof Buffer);
+        const {status, timestamp} = document;
+        if(document instanceof Buffer){
+            const updateResponse = await collection.updateOne(query, {$set: {
+                status: status,
+                timestamp: timestamp
+            }});
+            console.log(">>>  update success into:", collection_name, "|||", updateResponse);
+            return updateResponse;
+        } 
+        const updateResponse = await collection.updateOne(query, {$set: document});
+        
         console.log(">>>  update success into:", collection_name, "|||", updateResponse);
         return updateResponse;
 
     } catch (error){
-        console.log({error:500, message: "internal server error at database update"});
+        console.log({error, message: "internal server error at database update"});
+        return {error, message: "internal server error at database update"};
     }
 }
 
@@ -132,6 +147,7 @@ export const mdbDeleteOne = async (db_instance:DbInstance, collection_name:Colle
         return deleteResponse;
         
     } catch (error){
-        console.log({error:500, message: "internal server error at database delete"});
+        console.log({code:500, message: "internal server error at mdbDeleteOne", error});
+        return {code:500, message: "internal server error at mdbDeleteOne", error};
     }
 }

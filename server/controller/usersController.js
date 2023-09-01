@@ -36,6 +36,10 @@ export const usersPostController = (req, res) => __awaiter(void 0, void 0, void 
             if (!postResponse) {
                 return res.status(500).json({ error: 500, message: "internal server error at mongodb insert into users collection " });
             }
+            const { error, code } = postResponse;
+            if (error) {
+                return res.status(code).json({ code, message: "internal server error at mongodb insert into users collection", error });
+            }
             console.log('>>>insert sucess');
             res.status(200).json(postResponse);
         }

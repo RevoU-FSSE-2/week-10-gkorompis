@@ -31,8 +31,8 @@ export const authPostController = (req, res) => __awaiter(void 0, void 0, void 0
         const userDb = getResponse && getResponse[0];
         // expect user is not null
         if (!userDb) {
-            console.log({ error: 403, message: "unauthorized access, username not matched" });
-            return res.status(403).json({ error: 403, message: "unauthorized access" });
+            console.log({ code: 403, message: "unauthorized access, username not matched", error: {} });
+            return res.status(403).json({ code: 403, message: "unauthorized access", error: {} });
         }
         console.log(">>> userDB", userDb);
         // expect user password matches login password
@@ -42,8 +42,8 @@ export const authPostController = (req, res) => __awaiter(void 0, void 0, void 0
         console.log({ pass_login, pass_hashed });
         const passwordMatches = yield bcrypt.compare(pass_login, pass_hashed);
         if (!passwordMatches) {
-            console.log({ error: 403, message: "unauthorized access, password not matched", match: passwordMatches });
-            res.status(403).json({ error: 403, message: "unauthorized access", match: passwordMatches });
+            console.log({ code: 403, message: "unauthorized access, password not matched", match: passwordMatches, error: {} });
+            res.status(403).json({ code: 403, message: "unauthorized access", match: passwordMatches, error: {} });
         }
         // expect returns login token
         console.log(">>> bcrypt result", passwordMatches);
@@ -51,6 +51,6 @@ export const authPostController = (req, res) => __awaiter(void 0, void 0, void 0
         return res.status(200).json(token);
     }
     else {
-        console.log({ error: 401, message: "invalid request body" });
+        console.log({ code: 400, message: "bad request", error: {} });
     }
 });

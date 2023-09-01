@@ -43,7 +43,8 @@ export const mdbInsertOne = (db_instance, collection_name, document) => __awaite
         return postResponse;
     }
     catch (error) {
-        console.log({ error: 500, message: "internal server error at database insert" });
+        console.log({ code: 500, message: "internal server error at mdbInsertOne", error });
+        return { code: 500, message: "internal server error at mdbInsertOne", error };
     }
 });
 /****** FETCH MANY/ONE *******/
@@ -68,7 +69,8 @@ export const mdbFetch = (db_instance, collection_name, query) => __awaiter(void 
         return documents;
     }
     catch (error) {
-        console.log({ error: 500, message: "internal server error at database fetch" });
+        console.log({ code: 500, message: "internal server error at database fetch", error });
+        return { code: 500, message: "internal server error at database fetch", error };
     }
 });
 /****** UPDATE ONE *******/
@@ -86,12 +88,25 @@ export const mdbUpdateOne = (db_instance, collection_name, document, query) => _
         if (_id) {
             query._id = new ObjectId(_id);
         }
-        const updateResponse = collection.updateOne(query, { $set: document });
+        console.log(">>>update query:", query);
+        console.log(">>>update document:", document);
+        console.log(">>>instanceof Buffer:", document instanceof Buffer);
+        const { status, timestamp } = document;
+        if (document instanceof Buffer) {
+            const updateResponse = yield collection.updateOne(query, { $set: {
+                    status: status,
+                    timestamp: timestamp
+                } });
+            console.log(">>>  update success into:", collection_name, "|||", updateResponse);
+            return updateResponse;
+        }
+        const updateResponse = yield collection.updateOne(query, { $set: document });
         console.log(">>>  update success into:", collection_name, "|||", updateResponse);
         return updateResponse;
     }
     catch (error) {
-        console.log({ error: 500, message: "internal server error at database update" });
+        console.log({ error, message: "internal server error at database update" });
+        return { error, message: "internal server error at database update" };
     }
 });
 /****** DELETE ONE *******/
@@ -114,6 +129,7 @@ export const mdbDeleteOne = (db_instance, collection_name, query) => __awaiter(v
         return deleteResponse;
     }
     catch (error) {
-        console.log({ error: 500, message: "internal server error at database delete" });
+        console.log({ code: 500, message: "internal server error at mdbDeleteOne", error });
+        return { code: 500, message: "internal server error at mdbDeleteOne", error };
     }
 });

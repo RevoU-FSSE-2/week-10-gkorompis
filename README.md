@@ -15,6 +15,9 @@ Building MERN stack m-banking APP using AWS resources.
 
 
 ## 3. API Documentation
+
+FULL openapi documentation can be found [here](https://kmaww9zbl5.execute-api.ap-southeast-3.amazonaws.com/prod/api-docs/)
+
 ### 3.1 Dependencies
 The server-side application is hosted by AWS API Gateway, and follows this requirement:
 ```javascript

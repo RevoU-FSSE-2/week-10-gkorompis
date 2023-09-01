@@ -165,7 +165,7 @@ export const transactionsRequestGetOneController = async (req:Request, res:Respo
                 console.log(">>>role is maker, get self query:", mdbQuery);
             }
             //expect mdbquery object keys is not undefined
-            if(Object.keys(mdbQuery)[0]){
+            if(!Object.keys(mdbQuery)[0]){
                 console.log({error:400, message: "bad request at transactionsRequest fetch one, filter query undefined", mdbQuery});
                 return res.status(400).json({error:400, message: "bad request at transactionsRequest fetch one, filter query undefined", mdbQuery})
             };
@@ -207,7 +207,7 @@ export const transactionsRequestPatchOneController = async (req:Request, res:Res
                 return res.status(400).json({error:400, message: "bad request at transactionsRequest patch one, filter query undefined"})
             }
             //expect mdbquery object keys is not undefined
-            if(Object.keys(mdbQuery)[0]){
+            if(!Object.keys(mdbQuery)[0]){
                 console.log({error:400, message: "bad request at transactionsRequest patch one, filter query undefined"});
                 return res.status(400).json({error:400, message: "bad request at transactionsRequest patch one, filter query undefined"})
             };
@@ -240,7 +240,7 @@ export const transactionsRequestDeleteOneController = async (req:Request, res:Re
             const mdbQuery = extractMdbQuery({...query, id});
 
             //expect mdbquery object keys is not undefined
-            if(Object.keys(mdbQuery)[0]){
+            if(!Object.keys(mdbQuery)[0]){
                 console.log({error:400, message: "bad request at transactionsRequest delete filter query undefined"});
                 res.status(400).json({error:400, message: "bad request at transactionsRequest delete filter query undefined"})
             };
